@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Planet.h"
 
+
 Planet::Planet(string name, float radius, float period, char * path, float scale, float inclination,
 	float r, float g, float b, GLuint p, Planet * sateliteOf) {
 	CurrentLocationInSystem = 0;
@@ -53,18 +54,23 @@ void Planet::Orbit(float degree, float scaleOwnAxisRotation) {
 
 void Planet::Draw() {
 	glm::mat4 model_view;
-	if (Name == "Mercury") {
-		model_view = glm::translate(glm::mat4(1.0), glm::vec3(2.0, 0.0, 0.0));
-	} else if (Name == "Venus") {
-		model_view = glm::translate(glm::mat4(1.0), glm::vec3(-2.0, 0.0, 0.0));
-	} else {
-		model_view = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
-	}
+
+	
+		model_view = glm::translate(glm::mat4(1.0), glm::vec3(PositionX, PositionY, PositionZ));
+	
 	model_view = glm::scale(model_view, glm::vec3(Scale, Scale, Scale));
 	model_view = glm::rotate(model_view, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 	glUniformMatrix4fv(location, 1, GL_FALSE, &model_view[0][0]);
 	glBindVertexArray(vao);
 	glDrawArrays(GL_TRIANGLES, 0, NumVertices);
+
+	const float pi = 3.1415f;
+	const float degreeToRadian = 57.29577951f;
+	float translationInSystem = 0.05f * (orbitalRadius * 2);
+
+	PositionX = -cos((CurrentLocationInSystem / degreeToRadian + pi)) * translationInSystem;
+	PositionY = 0;
+	PositionZ = sin((CurrentLocationInSystem / degreeToRadian + pi)) * translationInSystem;
 
 	/*GLfloat position[] = { 0.0, 0.0, 0.0, 1.0 };
 	GLfloat light_ambient[] = { 0.3, 0.3, 0.3, 1.0 };

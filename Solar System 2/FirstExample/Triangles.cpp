@@ -37,9 +37,9 @@ void initPlanets(GLuint program) {
 	planets->Add(new Planet("Venus", 100, 0.615f, "Venus.bmp", 0.94f, 1.0f, 1.0f, 0.647f, 0.0f, program));
 	planets->Add(new Planet("Earth", 160, 1.0f, "Earth.bmp", 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, program));
 	planets->Add(new Planet("Mars", 220, 1.880f, "Mars.bmp", 0.53f, 1.0f, 1.0f, 0.0f, 0.0f, program));
-	/*planets->Add(new Planet("TheMoon", 10, 0.07f, "Pluto.bmp", 0.18f, 15.0f, planets->Get(3)));
-	planets->Add(new Planet("Phobos", 10, 0.06f, "Pluto.bmp", 0.1f, (float)(rand() % 180), planets->Get(4)));
-	planets->Add(new Planet("Deimos", 12, 0.05f, "Pluto.bmp", 0.08f, (float)(rand() % 180), planets->Get(4)));*/
+	planets->Add(new Planet("TheMoon", 10, 0.07f, "Pluto.bmp", 0.18f, 15.0f, 0.827f, 0.827f, 0.827f,program,planets->Get(3)));
+	planets->Add(new Planet("Phobos", 10, 0.06f, "Pluto.bmp", 0.1f, (float)(rand() % 180), 0.827f, 0.827f, 0.827f, program));
+	planets->Add(new Planet("Deimos", 12, 0.05f, "Pluto.bmp", 0.08f, (float)(rand() % 180), 0.827f, 0.827f, 0.827f, program));
 }
 
 //---------------------------------------------------------------------
