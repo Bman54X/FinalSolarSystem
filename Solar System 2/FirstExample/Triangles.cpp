@@ -3,118 +3,43 @@
 // triangles.cpp
 //
 ///////////////////////////////////////////////////////////////////////
+#ifndef TRIANGLES_H
+#define TRIANGLES_H
+
 #include "vectors.h"
 #include "glm\glm.hpp"
 #include "glm\gtc\matrix_transform.hpp"
 #include "SOIL.h"
 #include "LoadShaders.h"
+#include "Planet.h"
+#include "List.h"
+#include <ctime>
 
 using namespace std;
 
-enum VAO_IDs { Triangles, NumVAOs };
-enum Buffer_IDs { ArrayBuffer, NumBuffers };
-enum Attrib_IDs { vPosition = 0 };
-
-GLuint VAOs[NumVAOs];
-GLuint Buffers[3];
-GLuint location;
 GLuint location2;
 GLuint location3;
 
 GLuint texture[1];
 
-float translate_value = 0;
-float rotate_value = 0;
-float camera_distance = 2.0;
+List<Planet*> * planets;
 
-const int NumTimesToSubdivide = 5;
-const int NumTriangles = 4096;  // (4 faces)^(NumTimesToSubdivide + 1)
-const int NumVertices = 3 * NumTriangles;
+float stopWatch = 0.0f, zoom = 2.0f;
+float dragX = -1, dragY = -1;
+float mouseX, mouseY = 90;
+const float halfpi = 3.1415f / 180;
 
-typedef vec4 point4;
-typedef vec4 color4;
+void initPlanets(GLuint program) {
+	planets = new List<Planet*>();
 
-point4 points[NumVertices];
-vec3 normals[NumVertices];
-GLfloat textureCoordinates[NumVertices][2];
-
-// Model-view and projection matrices uniform location
-GLuint ModelView, Projection;
-
-int Index = 0;
-
-/*void triangle(const point4& a, const point4& b, const point4& c) {
-	vec3 normal = normalize(cross(b - a, c - b));
-
-	normals[Index] = normal;  points[Index] = a;  Index++;
-	normals[Index] = normal;  points[Index] = b;  Index++;
-	normals[Index] = normal;  points[Index] = c;  Index++;
-}*/
-
-void triangle(const point4& a, const point4& b, const point4& c) {
-	vec3 normal = normalize(cross(b - a, c - b));
-
-	normals[Index] = normal;  points[Index] = a;
-	
-	textureCoordinates[Index][0] = 0.5f + (atan2(normals[Index].x, normals[Index].z) / (2 * 3.14f));
-	textureCoordinates[Index][1] = 0.5f - (asin(normals[Index].y) / 3.14f);
-	//textureCoordinates[Index][0] = 0;
-	//textureCoordinates[Index][1] = 0;
-	Index++;
-
-	normals[Index] = normal;  points[Index] = b;
-	textureCoordinates[Index][0] = 0.5f + (atan2(normals[Index].x, normals[Index].z) / (2 * 3.14f));
-	textureCoordinates[Index][1] = 0.5f - (asin(normals[Index].y) / 3.14f);
-	//textureCoordinates[Index][0] = 0.5f;
-	//textureCoordinates[Index][1] = 1;
-	Index++;
-
-	normals[Index] = normal;  points[Index] = c;
-	textureCoordinates[Index][0] = 0.5f + (atan2(normals[Index].x, normals[Index].z) / (2 * 3.14f));
-	textureCoordinates[Index][1] = 0.5f - (asin(normals[Index].y) / 3.14f);
-	//textureCoordinates[Index][0] = 1;
-	//textureCoordinates[Index][1] = 0;
-	Index++;
-}
-
-point4 unit(const point4& p) {
-	float len = p.x*p.x + p.y*p.y + p.z*p.z;
-
-	point4 t;
-	if (len > DivideByZeroTolerance) {
-		t = p / sqrt(len);
-		t.w = 1.0;
-	}
-
-	return t;
-}
-
-void divide_triangle(const point4& a, const point4& b, const point4& c, int count) {
-	if (count > 0) {
-		point4 v1 = unit(a + b);
-		point4 v2 = unit(a + c);
-		point4 v3 = unit(b + c);
-		divide_triangle(a, v1, v2, count - 1);
-		divide_triangle(c, v2, v3, count - 1);
-		divide_triangle(b, v3, v1, count - 1);
-		divide_triangle(v1, v3, v2, count - 1);
-	} else {
-		triangle(a, b, c);
-	}
-}
-
-void tetrahedron(int count) {
-	point4 v[4] = {
-		vec4(0.0, 0.0, 1.0, 1.0),
-		vec4(0.0, 0.942809, -0.333333, 1.0),
-		vec4(-0.816497, -0.471405, -0.333333, 1.0),
-		vec4(0.816497, -0.471405, -0.333333, 1.0)
-	};
-
-	divide_triangle(v[0], v[1], v[2], count);
-	divide_triangle(v[3], v[2], v[1], count);
-	divide_triangle(v[0], v[3], v[1], count);
-	divide_triangle(v[0], v[2], v[3], count);
+	planets->Add(new Planet("Sun", 0.0f, 0.0f, "Sun.bmp", 1.0f, 3.63f, 1.0f, 1.0f, 0.0f, program));
+	planets->Add(new Planet("Mercury", 50, 0.240f, "Mercury.bmp", 0.38f, 1.0f, 0.827f, 0.827f, 0.827f, program));
+	planets->Add(new Planet("Venus", 100, 0.615f, "Venus.bmp", 0.94f, 1.0f, 1.0f, 0.647f, 0.0f, program));
+	planets->Add(new Planet("Earth", 160, 1.0f, "Earth.bmp", 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, program));
+	planets->Add(new Planet("Mars", 220, 1.880f, "Mars.bmp", 0.53f, 1.0f, 1.0f, 0.0f, 0.0f, program));
+	/*planets->Add(new Planet("TheMoon", 10, 0.07f, "Pluto.bmp", 0.18f, 15.0f, planets->Get(3)));
+	planets->Add(new Planet("Phobos", 10, 0.06f, "Pluto.bmp", 0.1f, (float)(rand() % 180), planets->Get(4)));
+	planets->Add(new Planet("Deimos", 12, 0.05f, "Pluto.bmp", 0.08f, (float)(rand() % 180), planets->Get(4)));*/
 }
 
 //---------------------------------------------------------------------
@@ -122,22 +47,7 @@ void tetrahedron(int count) {
 // init
 //
 void init(void) {
-	tetrahedron(NumTimesToSubdivide);
-
-	// Create a vertex array object
-	GLuint vao;
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
-	// Create and initialize a buffer object
-	GLuint buffer;
-	glGenBuffers(1, &buffer);
-	glBindBuffer(GL_ARRAY_BUFFER, buffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(points) + sizeof(normals), NULL, GL_STATIC_DRAW);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(points), points);
-	glBufferSubData(GL_ARRAY_BUFFER, sizeof(points), sizeof(normals), normals);
-
-	glGenTextures(1, texture);
+	/*glGenTextures(1, texture);
 
 	GLint width, height;
 	unsigned char * image = SOIL_load_image("Earth.png", &width, &height, 0, SOIL_LOAD_RGB);
@@ -149,7 +59,7 @@ void init(void) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);*/
 
 	/*glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_FLOAT, image);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
@@ -166,44 +76,16 @@ void init(void) {
 
 	GLuint program = LoadShaders(shaders);
 	glUseProgram(program);	//My Pipeline is set up
+	initPlanets(program);
 
-	GLfloat colorData[NumVertices][3];
-	for (int x = 0; x < NumVertices; x+=3) {
-		colorData[x][0] = (float)((rand() % 101)) / 100;
-		colorData[x][1] = (float)((rand() % 101)) / 100;
-		colorData[x][2] = (float)((rand() % 101)) / 100;
-
-		colorData[x+1][0] = (float)((rand() % 101)) / 100;
-		colorData[x+1][1] = (float)((rand() % 101)) / 100;
-		colorData[x+1][2] = (float)((rand() % 101)) / 100;
-
-		colorData[x+2][0] = (float)((rand() % 101)) / 100;
-		colorData[x+2][1] = (float)((rand() % 101)) / 100;
-		colorData[x+2][2] = (float)((rand() % 101)) / 100;
-	}
-	
 	glEnable(GL_DEPTH_TEST);
-	glGenBuffers(2, Buffers);
 
-	glBindBuffer(GL_ARRAY_BUFFER, Buffers[0]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
-	glBindAttribLocation(program, 0, "vPosition");
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-	glEnableVertexAttribArray(0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, Buffers[1]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(colorData), colorData, GL_STATIC_DRAW);
-	glBindAttribLocation(program, 1, "vertexColor");
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-	glEnableVertexAttribArray(1);
-
-	glBindBuffer(GL_ARRAY_BUFFER, Buffers[2]);
+	/*glBindBuffer(GL_ARRAY_BUFFER, Buffers[2]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(textureCoordinates), textureCoordinates, GL_STATIC_DRAW);
 	glBindAttribLocation(program, 2, "vTexCoord");
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(2);*/
 
-	location = glGetUniformLocation(program, "model_matrix");
 	location2 = glGetUniformLocation(program, "camera_matrix");
 	location3 = glGetUniformLocation(program, "projection_matrix");
 }
@@ -215,26 +97,69 @@ void init(void) {
 void display(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//Die 1 texture
-	glm::mat4 model_view = glm::translate(glm::mat4(1.0), glm::vec3(translate_value, 0.0, 0.0));
-	model_view = glm::rotate(model_view, rotate_value, glm::vec3(0.0f, 1.0f, 0.0f));
-	glUniformMatrix4fv(location, 1, GL_FALSE, &model_view[0][0]);
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
-	glDrawArrays(GL_TRIANGLES, 0, NumVertices);
+	float x, y, z;
+	x = sin((-mouseX + dragX) * halfpi) * cos((mouseY - dragY) * halfpi) * zoom;
+	y = sin((mouseY - dragY) * halfpi) * zoom;
+	z = cos((-mouseX + dragX) * halfpi) * cos((mouseY - dragY) * halfpi) * zoom;
+
+	/*gluLookAt(planetHover->PositionX + x, planetHover->PositionY + y, planetHover->PositionZ + z,
+		planetHover->PositionX, planetHover->PositionY, planetHover->PositionZ, 0.0, 1.0, 0.0);*/
+
+	//gluLookAt(x, y, z, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
 	//Camera stuff
-	glm::mat4 camera_matrix = glm::lookAt(glm::vec3(0.0, 0.0, camera_distance), glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, 1.0, 0.0));
+	//glm::mat4 camera_matrix = glm::lookAt(glm::vec3(0.0, 0.0, camera_distance), glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, 1.0, 0.0));
+	glm::mat4 camera_matrix = glm::lookAt(glm::vec3(x, y, z), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
 	glUniformMatrix4fv(location2, 1, GL_FALSE, &camera_matrix[0][0]);
-	glm::mat4 projection_matrix = glm::perspective(45.0f, 1024.0f / 1024.0f, 1.0f, 100.0f);
+	//glm::mat4 projection_matrix = glm::perspective(45.0f, 1024.0f / 1024.0f, 1.0f, 100.0f);
+	glm::mat4 projection_matrix = glm::perspective(40.0f, 1.0f, 1.0f, 1500.0f);
 	glUniformMatrix4fv(location3, 1, GL_FALSE, &projection_matrix[0][0]);
+
+	for (int i = 0; i < planets->Length(); i++) {
+		planets->Get(i)->Draw();
+	}
 
 	glFlush();
 }
 
-void idle() {
-	//translate_value += 0.0001;
-	//rotate_value += 0.0001f;
-	//glutPostRedisplay();
+void mouse(int button, int state, int x, int y) {
+	switch (button) {
+	case 0:
+		if (state == 0.0f) {
+			if (dragX == -1.0f) {
+				dragX = (float)x;
+				dragY = (float)y;
+			}
+			else {
+				dragX += (float)x - mouseX;
+				dragY += (float)y - mouseY;
+			}
+			mouseX = (float)x;
+			mouseY = (float)y;
+		}
+		break;
+	case 1:
+		break;
+	default:
+		break;
+	}
+}
+
+void mouseMove(int x, int y) {
+	mouseX = (float)x;
+	mouseY = (float)y;
+}
+
+void orbit() {
+	long newStopWatch = clock();
+
+	for (int i = 0; i < planets->Length(); i++) {
+		planets->Get(i)->Orbit(0.1f * ((newStopWatch - stopWatch) / 20.0f), 30.0f);
+	}
+
+	stopWatch = (float)newStopWatch;
+
+	glutPostRedisplay();
 }
 
 //---------------------------------------------------------------------
@@ -242,7 +167,7 @@ void idle() {
 // main
 //
 void keyboardHandler(unsigned char key, int x, int y) {
-	if (key == 'a') {
+	/*if (key == 'a') {
 		translate_value -= 0.1f;
 	} else if (key == 'd') {
 		translate_value += 0.1f;
@@ -250,10 +175,11 @@ void keyboardHandler(unsigned char key, int x, int y) {
 		rotate_value += 0.1f;
 	} else if (key == 'k') {
 		rotate_value -= 0.1f;
-	} else if (key == 'f') {
-		camera_distance += 0.1f;
+	} else */
+	if (key == 'f') {
+		zoom += 0.1f;
 	} else if (key == 'j') {
-		camera_distance -= 0.1f;
+		zoom -= 0.1f;
 	}
 
 	glutPostRedisplay();
@@ -268,12 +194,13 @@ int main(int argc, char** argv) {
 	glewInit();	//Initializes the glew and prepares the drawing pipeline.
 
 	init();
-
 	glutDisplayFunc(display);
-
 	glutKeyboardFunc(keyboardHandler);
-
-	glutIdleFunc(idle);
+	glutMotionFunc(mouseMove);
+	glutMouseFunc(mouse);
+	glutIdleFunc(orbit);
 
 	glutMainLoop();
 }
+
+#endif

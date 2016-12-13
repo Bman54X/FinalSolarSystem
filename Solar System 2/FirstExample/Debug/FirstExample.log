@@ -1,7 +1,9 @@
 ﻿  Triangles.cpp
-d:\helmaroc\documents\game projects\5th semester\computer graphics\lab 5 dice\firstexample\vectors.h(108): warning C4244: 'return': conversion from 'double' to 'GLfloat', possible loss of data
-d:\helmaroc\documents\game projects\5th semester\computer graphics\lab 5 dice\firstexample\triangles.cpp(109): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-d:\helmaroc\documents\game projects\5th semester\computer graphics\lab 5 dice\firstexample\triangles.cpp(110): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-d:\helmaroc\documents\game projects\5th semester\computer graphics\lab 5 dice\firstexample\triangles.cpp(111): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-  FirstExample.vcxproj -> D:\Helmaroc\Documents\Game Projects\5th Semester\Computer Graphics\Lab 5 Dice\Debug\FirstExample.exe
-  FirstExample.vcxproj -> D:\Helmaroc\Documents\Game Projects\5th Semester\Computer Graphics\Lab 5 Dice\Debug\FirstExample.pdb (Full PDB)
+  Planet.cpp
+d:\helmaroc\documents\game projects\5th semester\computer graphics\assignments\assignment 2\final solar system\finalsolarsystem\solar system 2\firstexample\planet.cpp(15): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\helmaroc\documents\game projects\5th semester\computer graphics\assignments\assignment 2\final solar system\finalsolarsystem\solar system 2\firstexample\planet.cpp(182): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+d:\helmaroc\documents\game projects\5th semester\computer graphics\assignments\assignment 2\final solar system\finalsolarsystem\solar system 2\firstexample\planet.cpp(183): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+d:\helmaroc\documents\game projects\5th semester\computer graphics\assignments\assignment 2\final solar system\finalsolarsystem\solar system 2\firstexample\planet.cpp(184): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+  Generating Code...
+  FirstExample.vcxproj -> D:\Helmaroc\Documents\Game Projects\5th Semester\Computer Graphics\Assignments\Assignment 2\Final Solar System\FinalSolarSystem\Solar System 2\Debug\FirstExample.exe
+  FirstExample.vcxproj -> D:\Helmaroc\Documents\Game Projects\5th Semester\Computer Graphics\Assignments\Assignment 2\Final Solar System\FinalSolarSystem\Solar System 2\Debug\FirstExample.pdb (Full PDB)

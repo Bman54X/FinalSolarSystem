@@ -33,6 +33,9 @@
     <ClCompile Include="..\SOIL\src\stb_image_aug.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Planet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="triangles.vert">
@@ -47,6 +50,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vectors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Planet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="List.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

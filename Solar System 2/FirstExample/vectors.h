@@ -1,3 +1,6 @@
+#ifndef VECTORS_H
+#define VECTORS_H
+
 #include "vgl.h"
 #include <math.h>
 
@@ -94,20 +97,22 @@ struct vec3 {
 	}
 };
 
-vec3 cross(const vec4& a, const vec4& b) {
+inline vec3 cross(const vec4& a, const vec4& b) {
 	return vec3(a.y * b.z - a.z * b.y,
 		a.z * b.x - a.x * b.z,
 		a.x * b.y - a.y * b.x);
 }
 
-GLfloat dot(const vec3& u, const vec3& v) {
+inline GLfloat dot(const vec3& u, const vec3& v) {
 	return u.x*v.x + u.y*v.y + u.z*v.z;
 }
 
-GLfloat length(const vec3& v) {
-	return sqrt(dot(v, v));
+inline GLfloat length(const vec3& v) {
+	return (float)sqrt(dot(v, v));
 }
 
-vec3 normalize(const vec3& v) {
+inline vec3 normalize(const vec3& v) {
 	return v / length(v);
 }
+
+#endif
