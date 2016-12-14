@@ -4,14 +4,14 @@
 
 
 Planet::Planet(string name, float radius, float period, char * path, float scale, float inclination,
-	float r, float g, float b, GLuint p, Planet * sateliteOf) {
+	float r, float g, float b, GLuint p, Planet * satelliteOf) {
 	CurrentLocationInSystem = 0;
 	Name = name;
 	orbitalRadius = radius;
 	orbitalPeriod = period;
 	texturePath = path;
 	Scale = scale;
-	SateliteOf = sateliteOf;
+	SatelliteOf = satelliteOf;
 	InclinationZ = inclination;
 	InclinationY = rand() % 180;
 	program = p;
@@ -53,24 +53,30 @@ void Planet::Orbit(float degree, float scaleOwnAxisRotation) {
 }
 
 void Planet::Draw() {
-	glm::mat4 model_view;
-
-	
-		model_view = glm::translate(glm::mat4(1.0), glm::vec3(PositionX, PositionY, PositionZ));
-	
-	model_view = glm::scale(model_view, glm::vec3(Scale, Scale, Scale));
-	model_view = glm::rotate(model_view, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-	glUniformMatrix4fv(location, 1, GL_FALSE, &model_view[0][0]);
-	glBindVertexArray(vao);
-	glDrawArrays(GL_TRIANGLES, 0, NumVertices);
-
 	const float pi = 3.1415f;
 	const float degreeToRadian = 57.29577951f;
 	float translationInSystem = 0.05f * (orbitalRadius * 2);
+	glm::mat4 model_view;
 
 	PositionX = -cos((CurrentLocationInSystem / degreeToRadian + pi)) * translationInSystem;
 	PositionY = 0;
 	PositionZ = sin((CurrentLocationInSystem / degreeToRadian + pi)) * translationInSystem;
+
+	if (SatelliteOf != NULL) {
+		model_view = glm::translate(glm::mat4(1.0), glm::vec3(SatelliteOf->PositionX, SatelliteOf->PositionY, SatelliteOf->PositionZ));
+		model_view = glm::translate(model_view, glm::vec3(PositionX, PositionY, PositionZ));
+		//glRotated(InclinationY, 0, 1, 0);
+		//glRotated(InclinationZ, 1, 0, 0);
+	} else {
+		model_view = glm::translate(glm::mat4(1.0), glm::vec3(PositionX, PositionY, PositionZ));
+	}
+	
+	model_view = glm::rotate(model_view, CurrentLocationOwnAxis, glm::vec3(0.0f, 0.0f, 1.0f));
+	model_view = glm::scale(model_view, glm::vec3(Scale, Scale, Scale));
+
+	glUniformMatrix4fv(location, 1, GL_FALSE, &model_view[0][0]);
+	glBindVertexArray(vao);
+	glDrawArrays(GL_TRIANGLES, 0, NumVertices);
 
 	/*GLfloat position[] = { 0.0, 0.0, 0.0, 1.0 };
 	GLfloat light_ambient[] = { 0.3, 0.3, 0.3, 1.0 };

@@ -23,8 +23,9 @@ GLuint location3;
 GLuint texture[1];
 
 List<Planet*> * planets;
+Planet * centerPlanet;
 
-float stopWatch = 0.0f, zoom = 2.0f;
+float stopWatch = 0.0f, zoom = 20.0f;
 float dragX = -1, dragY = -1;
 float mouseX, mouseY = 90;
 const float halfpi = 3.1415f / 180;
@@ -32,14 +33,28 @@ const float halfpi = 3.1415f / 180;
 void initPlanets(GLuint program) {
 	planets = new List<Planet*>();
 
-	planets->Add(new Planet("Sun", 0.0f, 0.0f, "Sun.bmp", 1.0f, 3.63f, 1.0f, 1.0f, 0.0f, program));
-	planets->Add(new Planet("Mercury", 50, 0.240f, "Mercury.bmp", 0.38f, 1.0f, 0.827f, 0.827f, 0.827f, program));
-	planets->Add(new Planet("Venus", 100, 0.615f, "Venus.bmp", 0.94f, 1.0f, 1.0f, 0.647f, 0.0f, program));
-	planets->Add(new Planet("Earth", 160, 1.0f, "Earth.bmp", 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, program));
-	planets->Add(new Planet("Mars", 220, 1.880f, "Mars.bmp", 0.53f, 1.0f, 1.0f, 0.0f, 0.0f, program));
-	planets->Add(new Planet("TheMoon", 10, 0.07f, "Pluto.bmp", 0.18f, 15.0f, 0.827f, 0.827f, 0.827f,program,planets->Get(3)));
-	planets->Add(new Planet("Phobos", 10, 0.06f, "Pluto.bmp", 0.1f, (float)(rand() % 180), 0.827f, 0.827f, 0.827f, program));
-	planets->Add(new Planet("Deimos", 12, 0.05f, "Pluto.bmp", 0.08f, (float)(rand() % 180), 0.827f, 0.827f, 0.827f, program));
+	planets->Add(new Planet("Sun", 0.0f, 0.0f, "Sun.bmp", 4.0f, 1.0f, 1.0f, 1.0f, 0.0f, program));
+	planets->Add(new Planet("Mercury", 100, 0.240f, "Mercury.bmp", 0.38f, 1.0f, 0.827f, 0.827f, 0.827f, program));
+	planets->Add(new Planet("Venus", 200, 0.615f, "Venus.bmp", 0.94f, 1.0f, 1.0f, 0.647f, 0.0f, program));
+	planets->Add(new Planet("Earth", 300, 1.0f, "Earth.bmp", 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, program));
+	planets->Add(new Planet("Mars", 400, 1.880f, "Mars.bmp", 0.53f, 1.0f, 1.0f, 0.0f, 0.0f, program));
+	planets->Add(new Planet("Jupiter", 700, -11.861, "Jupiter.bmp", 3.0f, 1.0f, 1.0f, 0.533f, 0.342f, program));
+	planets->Add(new Planet("Saturn", 1000, 29.457, "Saturn.bmp", 2.5f, 1.0f, 0.961f, 0.961f, 0.863f, program));
+	planets->Add(new Planet("Uranus", 1300, -84.016, "Uranus.bmp", 2.0f, 1.0f, 0.0f, 1.0f, 0.702f, program));
+	planets->Add(new Planet("Neptune", 1700, 164.8, "Neptune.bmp", 2.0f, 1.0f, 0.0f, 0.0f, 1.0f, program));
+	planets->Add(new Planet("Pluto", 2200, 247.68, "Pluto.bmp", 0.3f, 1.0f, 0.314f, 0.314f, 0.314f, program));
+
+	planets->Add(new Planet("TheMoon", 20, 0.07f, "Pluto.bmp", 0.18f, 15.0f, 0.827f, 0.827f, 0.827f, program, planets->Get(3)));
+	planets->Add(new Planet("Phobos", 20, 0.06f, "Pluto.bmp", 0.08f, (float)(rand() % 180), 0.827f, 0.827f, 0.827f, program, planets->Get(4)));
+	planets->Add(new Planet("Deimos", 30, 0.05f, "Pluto.bmp", 0.1f, (float)(rand() % 180), 0.827f, 0.827f, 0.827f, program, planets->Get(4)));
+
+	centerPlanet = planets->Get(0);
+}
+
+void JumpToPlanet(int index) {
+	Planet * planet;
+	planet = planets->Get(index);
+	centerPlanet = planet;
 }
 
 //---------------------------------------------------------------------
@@ -75,7 +90,7 @@ void init(void) {
 	};
 
 	GLuint program = LoadShaders(shaders);
-	glUseProgram(program);	//My Pipeline is set up
+	glUseProgram(program);
 	initPlanets(program);
 
 	glEnable(GL_DEPTH_TEST);
@@ -102,17 +117,11 @@ void display(void) {
 	y = sin((mouseY - dragY) * halfpi) * zoom;
 	z = cos((-mouseX + dragX) * halfpi) * cos((mouseY - dragY) * halfpi) * zoom;
 
-	/*gluLookAt(planetHover->PositionX + x, planetHover->PositionY + y, planetHover->PositionZ + z,
-		planetHover->PositionX, planetHover->PositionY, planetHover->PositionZ, 0.0, 1.0, 0.0);*/
-
-	//gluLookAt(x, y, z, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-
 	//Camera stuff
-	//glm::mat4 camera_matrix = glm::lookAt(glm::vec3(0.0, 0.0, camera_distance), glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, 1.0, 0.0));
-	glm::mat4 camera_matrix = glm::lookAt(glm::vec3(x, y, z), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+	glm::mat4 camera_matrix = glm::lookAt(glm::vec3(centerPlanet->PositionX + x, centerPlanet->PositionY + y, centerPlanet->PositionZ + z), 
+		glm::vec3(centerPlanet->PositionX, centerPlanet->PositionY, centerPlanet->PositionZ), glm::vec3(0.0, 1.0, 0.0));
 	glUniformMatrix4fv(location2, 1, GL_FALSE, &camera_matrix[0][0]);
-	//glm::mat4 projection_matrix = glm::perspective(45.0f, 1024.0f / 1024.0f, 1.0f, 100.0f);
-	glm::mat4 projection_matrix = glm::perspective(40.0f, 1.0f, 1.0f, 1500.0f);
+	glm::mat4 projection_matrix = glm::perspective(45.0f, 1.0f, 1.0f, 1500.0f);
 	glUniformMatrix4fv(location3, 1, GL_FALSE, &projection_matrix[0][0]);
 
 	for (int i = 0; i < planets->Length(); i++) {
@@ -162,24 +171,21 @@ void orbit() {
 	glutPostRedisplay();
 }
 
-//---------------------------------------------------------------------
-//
-// main
-//
-void keyboardHandler(unsigned char key, int x, int y) {
-	/*if (key == 'a') {
-		translate_value -= 0.1f;
-	} else if (key == 'd') {
-		translate_value += 0.1f;
-	} else if (key == 'l') {
-		rotate_value += 0.1f;
-	} else if (key == 'k') {
-		rotate_value -= 0.1f;
-	} else */
-	if (key == 'f') {
-		zoom += 0.1f;
-	} else if (key == 'j') {
-		zoom -= 0.1f;
+void keyboardHandler(unsigned char key, int A, int B) {
+	switch (key) {
+		case 'z': zoom++; break;
+		case 'x': zoom--; break;
+		case '0': JumpToPlanet(0); break;
+		case '1': JumpToPlanet(1); break;
+		case '2': JumpToPlanet(2); break;
+		case '3': JumpToPlanet(3); break;
+		case '4': JumpToPlanet(4); break;
+		case '5': JumpToPlanet(5); break;
+		case '6': JumpToPlanet(6); break;
+		case '7': JumpToPlanet(7); break;
+		case '8': JumpToPlanet(8); break;
+		case '9': JumpToPlanet(9); break;
+		default:break;
 	}
 
 	glutPostRedisplay();

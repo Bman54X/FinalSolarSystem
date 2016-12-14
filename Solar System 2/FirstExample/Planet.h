@@ -20,7 +20,7 @@ public:
 	float PositionX, PositionY, PositionZ;
 	char * texturePath;
 	GLuint Texture;
-	Planet * SateliteOf;
+	Planet * SatelliteOf;
 	GLuint vao, program, location;
 
 	const int NumTimesToSubdivide = 5;
@@ -45,8 +45,6 @@ public:
 	void Draw();
 
 	void triangle(const point4& a, const point4& b, const point4& c);
-
-	//void triangle(const point4& a, const point4& b, const point4& c);
 
 	point4 unit(const point4& p);
 
