@@ -33,20 +33,20 @@ const float halfpi = 3.1415f / 180;
 void initPlanets(GLuint program) {
 	planets = new List<Planet*>();
 
-	planets->Add(new Planet("Sun", 0.0f, 0.0f, "Sun.bmp", 4.0f, 1.0f, 1.0f, 1.0f, 0.0f, program));
-	planets->Add(new Planet("Mercury", 100, 0.240f, "Mercury.bmp", 0.38f, 1.0f, 0.827f, 0.827f, 0.827f, program));
-	planets->Add(new Planet("Venus", 200, 0.615f, "Venus.bmp", 0.94f, 1.0f, 1.0f, 0.647f, 0.0f, program));
-	planets->Add(new Planet("Earth", 300, 1.0f, "Earth.bmp", 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, program));
-	planets->Add(new Planet("Mars", 400, 1.880f, "Mars.bmp", 0.53f, 1.0f, 1.0f, 0.0f, 0.0f, program));
-	planets->Add(new Planet("Jupiter", 700, -11.861, "Jupiter.bmp", 3.0f, 1.0f, 1.0f, 0.533f, 0.342f, program));
-	planets->Add(new Planet("Saturn", 1000, 29.457, "Saturn.bmp", 2.5f, 1.0f, 0.961f, 0.961f, 0.863f, program));
-	planets->Add(new Planet("Uranus", 1300, -84.016, "Uranus.bmp", 2.0f, 1.0f, 0.0f, 1.0f, 0.702f, program));
-	planets->Add(new Planet("Neptune", 1700, 164.8, "Neptune.bmp", 2.0f, 1.0f, 0.0f, 0.0f, 1.0f, program));
-	planets->Add(new Planet("Pluto", 2200, 247.68, "Pluto.bmp", 0.3f, 1.0f, 0.314f, 0.314f, 0.314f, program));
+	planets->Add(new Planet("Sun", 0.0f, 0.0f, "Sun.bmp", 4.0f, 1.0f, 1.0f, 0.0f, program));
+	planets->Add(new Planet("Mercury", 100, 0.240f, "Mercury.bmp", 0.38f, 0.827f, 0.827f, 0.827f, program));
+	planets->Add(new Planet("Venus", 200, 0.615f, "Venus.bmp", 0.94f, 1.0f, 0.647f, 0.0f, program));
+	planets->Add(new Planet("Earth", 300, 1.0f, "Earth.bmp", 1.0f, 0.0f, 1.0f, 0.0f, program));
+	planets->Add(new Planet("Mars", 400, 1.880f, "Mars.bmp", 0.53f, 1.0f, 0.0f, 0.0f, program));
+	planets->Add(new Planet("Jupiter", 700, -11.861, "Jupiter.bmp", 3.0f, 1.0f, 0.533f, 0.342f, program));
+	planets->Add(new Planet("Saturn", 1000, 29.457, "Saturn.bmp", 2.5f, 0.961f, 0.961f, 0.863f, program));
+	planets->Add(new Planet("Uranus", 1300, -84.016, "Uranus.bmp", 2.0f, 0.0f, 1.0f, 0.702f, program));
+	planets->Add(new Planet("Neptune", 1700, 164.8, "Neptune.bmp", 2.0f, 0.0f, 0.0f, 1.0f, program));
+	planets->Add(new Planet("Pluto", 2200, 247.68, "Pluto.bmp", 0.3f, 0.314f, 0.314f, 0.314f, program));
 
-	planets->Add(new Planet("TheMoon", 20, 0.07f, "Pluto.bmp", 0.18f, 15.0f, 0.827f, 0.827f, 0.827f, program, planets->Get(3)));
-	planets->Add(new Planet("Phobos", 20, 0.06f, "Pluto.bmp", 0.08f, (float)(rand() % 180), 0.827f, 0.827f, 0.827f, program, planets->Get(4)));
-	planets->Add(new Planet("Deimos", 30, 0.05f, "Pluto.bmp", 0.1f, (float)(rand() % 180), 0.827f, 0.827f, 0.827f, program, planets->Get(4)));
+	planets->Add(new Planet("TheMoon", 20, 0.07f, "Pluto.bmp", 0.18f, 0.827f, 0.827f, 0.827f, program, planets->Get(3)));
+	planets->Add(new Planet("Phobos", 20, 0.06f, "Pluto.bmp", 0.08f, 0.827f, 0.827f, 0.827f, program, planets->Get(4)));
+	planets->Add(new Planet("Deimos", 30, 0.05f, "Pluto.bmp", 0.1f, 0.827f, 0.827f, 0.827f, program, planets->Get(4)));
 
 	centerPlanet = planets->Get(0);
 }

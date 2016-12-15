@@ -4,5 +4,10 @@ d:\helmaroc\documents\game projects\5th semester\computer graphics\assignments\a
 d:\helmaroc\documents\game projects\5th semester\computer graphics\assignments\assignment 2\final solar system\finalsolarsystem\solar system 2\firstexample\triangles.cpp(43): warning C4305: 'argument': truncation from 'double' to 'float'
 d:\helmaroc\documents\game projects\5th semester\computer graphics\assignments\assignment 2\final solar system\finalsolarsystem\solar system 2\firstexample\triangles.cpp(44): warning C4305: 'argument': truncation from 'double' to 'float'
 d:\helmaroc\documents\game projects\5th semester\computer graphics\assignments\assignment 2\final solar system\finalsolarsystem\solar system 2\firstexample\triangles.cpp(45): warning C4305: 'argument': truncation from 'double' to 'float'
+  Planet.cpp
+d:\helmaroc\documents\game projects\5th semester\computer graphics\assignments\assignment 2\final solar system\finalsolarsystem\solar system 2\firstexample\planet.cpp(142): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+d:\helmaroc\documents\game projects\5th semester\computer graphics\assignments\assignment 2\final solar system\finalsolarsystem\solar system 2\firstexample\planet.cpp(143): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+d:\helmaroc\documents\game projects\5th semester\computer graphics\assignments\assignment 2\final solar system\finalsolarsystem\solar system 2\firstexample\planet.cpp(144): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+  Generating Code...
   FirstExample.vcxproj -> D:\Helmaroc\Documents\Game Projects\5th Semester\Computer Graphics\Assignments\Assignment 2\Final Solar System\FinalSolarSystem\Solar System 2\Debug\FirstExample.exe
   FirstExample.vcxproj -> D:\Helmaroc\Documents\Game Projects\5th Semester\Computer Graphics\Assignments\Assignment 2\Final Solar System\FinalSolarSystem\Solar System 2\Debug\FirstExample.pdb (Full PDB)

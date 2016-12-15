@@ -3,7 +3,7 @@
 #include "Planet.h"
 
 
-Planet::Planet(string name, float radius, float period, char * path, float scale, float inclination,
+Planet::Planet(string name, float radius, float period, char * path, float scale,
 	float r, float g, float b, GLuint p, Planet * satelliteOf) {
 	CurrentLocationInSystem = 0;
 	Name = name;
@@ -12,8 +12,6 @@ Planet::Planet(string name, float radius, float period, char * path, float scale
 	texturePath = path;
 	Scale = scale;
 	SatelliteOf = satelliteOf;
-	InclinationZ = inclination;
-	InclinationY = rand() % 180;
 	program = p;
 
 	glGenVertexArrays(1, &vao);
@@ -65,8 +63,6 @@ void Planet::Draw() {
 	if (SatelliteOf != NULL) {
 		model_view = glm::translate(glm::mat4(1.0), glm::vec3(SatelliteOf->PositionX, SatelliteOf->PositionY, SatelliteOf->PositionZ));
 		model_view = glm::translate(model_view, glm::vec3(PositionX, PositionY, PositionZ));
-		//glRotated(InclinationY, 0, 1, 0);
-		//glRotated(InclinationZ, 1, 0, 0);
 	} else {
 		model_view = glm::translate(glm::mat4(1.0), glm::vec3(PositionX, PositionY, PositionZ));
 	}
@@ -77,54 +73,6 @@ void Planet::Draw() {
 	glUniformMatrix4fv(location, 1, GL_FALSE, &model_view[0][0]);
 	glBindVertexArray(vao);
 	glDrawArrays(GL_TRIANGLES, 0, NumVertices);
-
-	/*GLfloat position[] = { 0.0, 0.0, 0.0, 1.0 };
-	GLfloat light_ambient[] = { 0.3, 0.3, 0.3, 1.0 };
-	const float pi = 3.1415f;
-	const float degreeToRadian = 57.29577951f;
-	float translationInSystem = 0.05f * (orbitalRadius * 2);
-
-	PositionX = -cos((CurrentLocationInSystem / degreeToRadian + pi)) * translationInSystem;
-	PositionY = 0;
-	PositionZ = sin((CurrentLocationInSystem / degreeToRadian + pi)) * translationInSystem;
-
-	if (Name == "Sun") {
-		glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-		glLightfv(GL_LIGHT0, GL_POSITION, position);
-	}
-
-	if (SateliteOf != NULL) {
-		glPushMatrix();
-		glTranslated(SateliteOf->PositionX, SateliteOf->PositionY, SateliteOf->PositionZ);
-	}
-
-	glPushMatrix();
-	if (SateliteOf != NULL) {
-		glRotated(InclinationY, 0, 1, 0);
-		glRotated(InclinationZ, 1, 0, 0);
-	}
-	glTranslated(PositionX, PositionY, PositionZ);
-
-	GLUquadric * qobj = gluNewQuadric();
-	gluQuadricTexture(qobj, GL_TRUE);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, Texture);
-	glRotatef(270.0f, 1.0f, 0.0f, 0.0f);
-	glPushMatrix();
-	glRotated(CurrentLocationOwnAxis, 0, 0, 1);
-	gluSphere(qobj, Scale / 3, 30, 30);
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
-	gluDeleteQuadric(qobj);
-
-	if (Name == "Sun") {
-		glEnable(GL_LIGHTING);
-	}
-	glPopMatrix();
-
-	if (SateliteOf != NULL) {
-		glPopMatrix();
-	}*/
 }
 
 void Planet::triangle(const point4& a, const point4& b, const point4& c) {
